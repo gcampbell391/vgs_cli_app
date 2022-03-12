@@ -14,7 +14,9 @@ if startGame
     currentDeck, currentPlayerScore, currentDealerScore = currentGame.dealCards(preparedDeck)
     # Check for BlackJack
     if currentPlayerScore == 21
+        sleep(1)
         puts "#{currentGame.dealer.name}: You Hit BlackJack! Congratulations! You Win!"
+        sleep(1)
         puts "#{currentGame.dealer.name}: Please Come Back And Play Again!"
         puts ""
         currentGame.result = "Player hit BlackJack! Player Won."
@@ -25,14 +27,18 @@ if startGame
     currentPlayerScore, currentDeck,  = currentGame.hitOrStay(currentPlayerScore, currentDeck)
     # Check for BlackJack or Bust
     if currentPlayerScore == 21
+        sleep(1)
         puts "#{currentGame.dealer.name}: You Hit BlackJack! Congratulations! You Win!"
+        sleep(1)
         puts "#{currentGame.dealer.name}: Please Come Back And Play Again!"
         puts ""
         currentGame.result = "Player hit BlackJack! Player Won."
         currentGame.save
         exit
     elsif currentPlayerScore > 21
+        sleep(1)
         puts "#{currentGame.dealer.name}: I'm Sorry, But It Looks Like You Busted! I am Victorious!"
+        sleep(1)
         puts "#{currentGame.dealer.name}: Better Luck Next Time, and Thanks for Playing!"
         puts ""
         currentGame.result = "Player Busted. Dealer Won."

@@ -12,8 +12,4 @@ class Deck < ApplicationRecord
         return preparedDeck
     end
 
-    # Return the number of remaining cards in the deck
-    def remainingCardsLeft
-        return self.total
-    end
 end

@@ -14,6 +14,7 @@ class Game < ApplicationRecord
     return result
   end
 
+  # Create a new game
   def self.createGame
     #Fetch the only Player
     player1 = Player.first
@@ -29,8 +30,11 @@ class Game < ApplicationRecord
   def provideGreetting
     puts ""
     puts "#{self.dealer.name}: Hello #{self.player.name}, Welcome to BlackJack!"
+    sleep(1)
     puts "#{self.dealer.name}: I will be your dealer today. Good luck!" 
+    sleep(1)
     puts "#{self.dealer.name}: I will now shuffle the deck, and pass out the cards." 
+    sleep(1)
     puts ""
   end
 
@@ -50,8 +54,11 @@ class Game < ApplicationRecord
     end
     playersSecondCard = currentDeck.shift
     puts "#{self.dealer.name}: Your first card is a #{playersFirstCard.card_name}."
+    sleep(1)
     puts "#{self.dealer.name}: My first card is a #{dealersFirstCard.card_name}." 
+    sleep(1)
     puts "#{self.dealer.name}: Your second card is a #{playersSecondCard.card_name}." 
+    sleep(1)
     puts ""
     puts "Current Score:"
     playersCurrentScore = playersFirstCardValue + playersSecondCard.card_value
@@ -74,9 +81,11 @@ class Game < ApplicationRecord
         return updatedPlayerScore, currentDeck
       elsif playerAction == 1
         nextCard = currentDeck.shift
+        # TO-DO: Add prompt to ask user if they want Ace to be 1 or 11 if score is <= 10. Dealer might need the same logic
         updatedPlayerScore = nextCard.card_value + updatedPlayerScore
         puts ""
         puts "#{self.dealer.name}: You chose hit. Your next card is #{nextCard.card_name}"
+        sleep(1)
         puts "#{self.dealer.name}: Your current score is #{updatedPlayerScore}"
         puts ""
         if updatedPlayerScore >= 21
@@ -94,11 +103,15 @@ class Game < ApplicationRecord
     puts "#{self.dealer.name}: #{dealerScore}"
     puts ""
     #Reveal dealer's second card.
+    sleep(1)
     puts "#{self.dealer.name}: I will now reveal my second card."
+    sleep(1)
     dealersSecondCard = currentDeck.shift
     updatedDealerScore = dealerScore + dealersSecondCard.card_value
     puts "#{self.dealer.name}: My second card is a #{dealersSecondCard.card_name}"
+    sleep(1)
     puts "#{self.dealer.name}: My current score is #{updatedDealerScore}"
+    sleep(1)
     puts ""
     
     # Dealer will continue to hit until score is > 17
@@ -106,17 +119,23 @@ class Game < ApplicationRecord
       dealersNextCard = currentDeck.shift
       updatedDealerScore = updatedDealerScore+ dealersNextCard.card_value
       puts "#{self.dealer.name}: I Am Going To Hit."
+      sleep(2)
       puts "#{self.dealer.name}: My next card is a #{dealersNextCard.card_name}"
+      sleep(1)
       puts "#{self.dealer.name}: My current score is #{updatedDealerScore}"
+      sleep(1)
       puts ""
       puts "Current Score:"
       puts "#{self.player.name}: #{playerScore}"
       puts "#{self.dealer.name}: #{updatedDealerScore}"
       puts ""
+      sleep(1)
     end
     # Check if dealer has blackjack
     if updatedDealerScore == 21
+      sleep(1)
       puts "#{self.dealer.name}: It's My Lucky Day! I Hit BlackJack!"
+      sleep(1)
       puts "#{self.dealer.name}: Tough break #{self.player.name}. Maybe Next Time."
       puts ""
       self.result = "Dealer Hit BlackJack! Dealer Won."
@@ -124,7 +143,9 @@ class Game < ApplicationRecord
       exit
     # Check if dealer busted
     elsif updatedDealerScore > 21
+      sleep(1)
       puts "#{self.dealer.name}: Ah Snap. I Busted.."
+      sleep(1)
       puts "#{self.dealer.name}: You Win This Time, But I Shall Win Next Time!"
       puts ""
       self.result = "Dealer Busted. Player Won."
@@ -133,21 +154,27 @@ class Game < ApplicationRecord
     # Check if dealer scored at least 17. Dealer only hits if score is below 17.
     elsif updatedDealerScore >= 17
       if updatedDealerScore == playerScore
+        sleep(1)
         puts "#{self.dealer.name}: I'm Staying at #{updatedDealerScore}. Looks Like We Tie!"
+        sleep(1)
         puts "#{self.dealer.name}: You Thought You Were Going To Win With #{playerScore} Didn't You?"
         puts ""
         self.result = "Dealer Stayed At #{updatedDealerScore}, And Player Stayed At #{playerScore}. Game Was Tied."
         self.save
       # Check if dealer's score is less than players score after both players stayed
       elsif updatedDealerScore < playerScore
+        sleep(1)
         puts "#{self.dealer.name}: I'm Staying at #{updatedDealerScore}. Looks Like You Win."
+        sleep(1)
         puts "#{self.dealer.name}: Are You Counting Cards? I'm On To You :)"
         puts ""
         self.result = "Dealer Stayed At #{updatedDealerScore}, And Player Stayed At #{playerScore}. Player Won."
         self.save
       # Check if dealer's score is more than players score after both players stayed
       elsif updatedDealerScore > playerScore
+        sleep(1)
         puts "#{self.dealer.name}: I'm Staying at #{updatedDealerScore}. Looks Like I Win!"
+        sleep(1)
         puts "#{self.dealer.name}: Try Being More Aggresive Next Time!"
         puts ""
         self.result = "Dealer Stayed At #{updatedDealerScore}, And Player Stayed At #{playerScore}. Dealer Won."
@@ -157,7 +184,5 @@ class Game < ApplicationRecord
     end
     
   end
-
-
 
 end
