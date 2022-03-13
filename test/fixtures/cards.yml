@@ -1,11 +1,14 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+--- !omap
 
 one:
   card_value: 1
-  card_name: MyString
-  deck: one
+  card_name: Ace of Spades
+  deck_id: 1
+
 
 two:
   card_value: 1
-  card_name: MyString
-  deck: two
+  card_name: 2 of Spades
+  deck_id: 1
+

@@ -2,14 +2,13 @@ class Deck < ApplicationRecord
     has_many :games 
     has_many :cards
 
-    # Prepares the deck by feteching the cards and shuffling
-    def prepareDeck
-        preparedDeck = []
-        allCards = self.cards.all
+    # Prepares the deck by shuffling
+    def self.shuffleCards(cards)
+        shuffledDeck = []
         #Shuffle the cards
-        preparedDeck = allCards.shuffle
+        shuffledDeck = cards.shuffle
         #Return the prepared deck
-        return preparedDeck
+        return shuffledDeck
     end
 
 end

@@ -1,7 +1,10 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+#This will make the fixtures ordered! 
+--- !omap
 
-one:
-  name: MyString
+blackjack:
+  id: 1
+  name: "BlackJack Deck"
 
 two:
   name: MyString

@@ -90,10 +90,10 @@ class Game < ApplicationRecord
   def hitOrStay(playerScore, currentDeck)
     prompt = TTY::Prompt.new
     playerChoseStay = false
-    choices = {"Hit" => 1, "Stay" => 2}
+    playerChoices = {"Hit" => 1, "Stay" => 2}
     updatedPlayerScore = playerScore
     while playerChoseStay == false 
-      playerAction = prompt.select("Would You Like to Hit or Stay?", choices)
+      playerAction = prompt.select("Would You Like to Hit or Stay?", playerChoices)
       if playerAction == 2
         playerChoseStay = true
         return updatedPlayerScore, currentDeck
@@ -102,8 +102,8 @@ class Game < ApplicationRecord
         # Ask player if they want Ace to be 1 or 11 if score is <= 10. Dealer might need the same logic. Maybe add logic to 2nd card too
         if nextCard.card_value == 1 && updatedPlayerScore < 11 
           #Ask player if they want to choose 1 or 11
-          choices = {"1" => 1, "11" => 2}
-          aceCardValue = prompt.select("Your next card is an Ace, would should the value be?", choices)
+          aceChoices = {"1" => 1, "11" => 2}
+          aceCardValue = prompt.select("Your next card is an Ace, would should the value be?", aceChoices)
           if aceCardValue == 2
             nextCard.card_value = 11
           end
@@ -133,9 +133,19 @@ class Game < ApplicationRecord
     puts "#{self.dealer.name}: I will now reveal my second card."
     sleep(1)
     dealersSecondCard = currentDeck.shift
+    # If dealer's first card was < 11, and dealer's second card is an Ace
+    dealerDrewAce = false
+    if dealerScore < 11 && dealersSecondCard.card_value == 1
+      dealersSecondCard.card_value = 11
+      dealerDrewAce = true
+    end
     updatedDealerScore = dealerScore + dealersSecondCard.card_value
     puts "#{self.dealer.name}: My second card is a #{dealersSecondCard.card_name}"
     sleep(1)
+    if dealerDrewAce == true
+      puts "#{self.dealer.name}: Since my score is currently low, so I will choose the value 11 instead of 1 for the Ace."
+      sleep(1) 
+    end
     puts "#{self.dealer.name}: My current score is #{updatedDealerScore}"
     sleep(1)
     puts ""
@@ -154,7 +164,7 @@ class Game < ApplicationRecord
       puts "#{self.dealer.name}: My next card is a #{dealersNextCard.card_name}"
       sleep(1)
       if dealerDrewAce == true
-        puts "#{self.dealer.name}: Since my score is currently low, so I will choose the value 11 instead or 1 for the Ace."
+        puts "#{self.dealer.name}: Since my score is currently low, so I will choose the value 11 instead of 1 for the Ace."
         sleep(1) 
       end
       puts "#{self.dealer.name}: My current score is #{updatedDealerScore}"

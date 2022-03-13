@@ -9,7 +9,8 @@ if startGame
     # Provide Greeting
     currentGame.provideGreetting
     # Prepare the game deck 
-    preparedDeck = currentGame.deck.prepareDeck
+    cards = currentGame.deck.cards.all
+    preparedDeck = Deck.shuffleCards(cards)
     # Deal Cards 
     currentDeck, currentPlayerScore, currentDealerScore = currentGame.dealCards(preparedDeck)
     # Check for BlackJack or Bust
