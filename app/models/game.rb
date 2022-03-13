@@ -26,7 +26,7 @@ class Game < ApplicationRecord
     return currentGame
   end
 
-  # Provide Greeting Before Game Begins
+  # Provide Greeting 
   def provideGreetting
     puts ""
     puts "#{self.dealer.name}: Hello #{self.player.name}, Welcome to BlackJack!"
@@ -35,6 +35,15 @@ class Game < ApplicationRecord
     sleep(1)
     puts "#{self.dealer.name}: I will now shuffle the deck, and pass out the cards." 
     sleep(1)
+    puts ""
+  end
+
+  # Provide Farewell 
+  def self.provideFarewell
+    puts ""
+    puts "That's too bad!"
+    sleep(1)
+    puts "Maybe next time!"
     puts ""
   end
 
@@ -59,6 +68,15 @@ class Game < ApplicationRecord
     sleep(1)
     puts "#{self.dealer.name}: Your second card is a #{playersSecondCard.card_name}." 
     sleep(1)
+    #Ask player if they want to choose 1 or 11 for their Ace if first card has value < 9
+    if playersFirstCardValue < 11 && playersSecondCard.card_value == 1
+    choices = {"1" => 1, "11" => 2}
+    prompt = TTY::Prompt.new
+    aceCardValue = prompt.select("Your second card is an Ace, would should the value be?", choices)
+      if aceCardValue == 2
+        playersSecondCard.card_value = 11
+      end
+    end 
     puts ""
     puts "Current Score:"
     playersCurrentScore = playersFirstCardValue + playersSecondCard.card_value
@@ -75,13 +93,21 @@ class Game < ApplicationRecord
     choices = {"Hit" => 1, "Stay" => 2}
     updatedPlayerScore = playerScore
     while playerChoseStay == false 
-      playerAction = prompt.select("Would You Like To Hit Or Stay?", choices)
+      playerAction = prompt.select("Would You Like to Hit or Stay?", choices)
       if playerAction == 2
         playerChoseStay = true
         return updatedPlayerScore, currentDeck
       elsif playerAction == 1
         nextCard = currentDeck.shift
-        # TO-DO: Add prompt to ask user if they want Ace to be 1 or 11 if score is <= 10. Dealer might need the same logic
+        # Ask player if they want Ace to be 1 or 11 if score is <= 10. Dealer might need the same logic. Maybe add logic to 2nd card too
+        if nextCard.card_value == 1 && updatedPlayerScore < 11 
+          #Ask player if they want to choose 1 or 11
+          choices = {"1" => 1, "11" => 2}
+          aceCardValue = prompt.select("Your next card is an Ace, would should the value be?", choices)
+          if aceCardValue == 2
+            nextCard.card_value = 11
+          end
+        end
         updatedPlayerScore = nextCard.card_value + updatedPlayerScore
         puts ""
         puts "#{self.dealer.name}: You chose hit. Your next card is #{nextCard.card_name}"
@@ -95,7 +121,7 @@ class Game < ApplicationRecord
     end
   end
 
-  # Dealer's turn. 
+  # Dealer's turn. Could be refactored.
   def dealersTurn(playerScore, dealerScore, currentDeck)
     puts ""
     puts "Current Score:"
@@ -116,12 +142,21 @@ class Game < ApplicationRecord
     
     # Dealer will continue to hit until score is > 17
     while updatedDealerScore < 17 
+      dealerDrewAce = false
       dealersNextCard = currentDeck.shift
+      if updatedDealerScore < 11 && dealersNextCard.card_value == 1
+        dealersNextCard.card_value = 11
+        dealerDrewAce = true
+      end
       updatedDealerScore = updatedDealerScore+ dealersNextCard.card_value
-      puts "#{self.dealer.name}: I Am Going To Hit."
-      sleep(2)
+      puts "#{self.dealer.name}: I am going to hit."
+      sleep(1)
       puts "#{self.dealer.name}: My next card is a #{dealersNextCard.card_name}"
       sleep(1)
+      if dealerDrewAce == true
+        puts "#{self.dealer.name}: Since my score is currently low, so I will choose the value 11 instead or 1 for the Ace."
+        sleep(1) 
+      end
       puts "#{self.dealer.name}: My current score is #{updatedDealerScore}"
       sleep(1)
       puts ""
@@ -134,55 +169,77 @@ class Game < ApplicationRecord
     # Check if dealer has blackjack
     if updatedDealerScore == 21
       sleep(1)
-      puts "#{self.dealer.name}: It's My Lucky Day! I Hit BlackJack!"
+      puts "#{self.dealer.name}: It's my lucky day! I hit BlackJack!"
       sleep(1)
-      puts "#{self.dealer.name}: Tough break #{self.player.name}. Maybe Next Time."
+      puts "#{self.dealer.name}: Tough break #{self.player.name}. Maybe next time."
       puts ""
-      self.result = "Dealer Hit BlackJack! Dealer Won."
+      self.result = "Dealer hit BlackJack! Dealer won."
       self.save
       exit
     # Check if dealer busted
     elsif updatedDealerScore > 21
       sleep(1)
-      puts "#{self.dealer.name}: Ah Snap. I Busted.."
+      puts "#{self.dealer.name}: Ah snap. I busted..."
       sleep(1)
-      puts "#{self.dealer.name}: You Win This Time, But I Shall Win Next Time!"
+      puts "#{self.dealer.name}: You win this time, but I shall win next time!"
       puts ""
-      self.result = "Dealer Busted. Player Won."
+      self.result = "Dealer busted. Player won."
       self.save
       exit
     # Check if dealer scored at least 17. Dealer only hits if score is below 17.
     elsif updatedDealerScore >= 17
       if updatedDealerScore == playerScore
         sleep(1)
-        puts "#{self.dealer.name}: I'm Staying at #{updatedDealerScore}. Looks Like We Tie!"
+        puts "#{self.dealer.name}: I'm staying at #{updatedDealerScore}. Looks like we tie!"
         sleep(1)
-        puts "#{self.dealer.name}: You Thought You Were Going To Win With #{playerScore} Didn't You?"
+        puts "#{self.dealer.name}: You thought you were going to win with #{playerScore}, didn't you?"
         puts ""
-        self.result = "Dealer Stayed At #{updatedDealerScore}, And Player Stayed At #{playerScore}. Game Was Tied."
+        self.result = "Dealer stayed at #{updatedDealerScore}, and Player stayed at #{playerScore}. Game was tied."
         self.save
       # Check if dealer's score is less than players score after both players stayed
       elsif updatedDealerScore < playerScore
         sleep(1)
-        puts "#{self.dealer.name}: I'm Staying at #{updatedDealerScore}. Looks Like You Win."
+        puts "#{self.dealer.name}: I'm staying at #{updatedDealerScore}. Looks like you win."
         sleep(1)
-        puts "#{self.dealer.name}: Are You Counting Cards? I'm On To You :)"
+        puts "#{self.dealer.name}: Are you counting cards? I'm on to you :)"
         puts ""
-        self.result = "Dealer Stayed At #{updatedDealerScore}, And Player Stayed At #{playerScore}. Player Won."
+        self.result = "Dealer stayed at #{updatedDealerScore}, and Player stayed at #{playerScore}. Player won."
         self.save
       # Check if dealer's score is more than players score after both players stayed
       elsif updatedDealerScore > playerScore
         sleep(1)
-        puts "#{self.dealer.name}: I'm Staying at #{updatedDealerScore}. Looks Like I Win!"
+        puts "#{self.dealer.name}: I'm staying at #{updatedDealerScore}. Looks like I win!"
         sleep(1)
-        puts "#{self.dealer.name}: Try Being More Aggresive Next Time!"
+        puts "#{self.dealer.name}: Try being more aggresive next time!"
         puts ""
-        self.result = "Dealer Stayed At #{updatedDealerScore}, And Player Stayed At #{playerScore}. Dealer Won."
+        self.result = "Dealer stayed at #{updatedDealerScore}, And player stayed at #{playerScore}. Dealer won."
         self.save
       end
       exit
     end
-    
+  end
+
+  # Check for blackjack or bust..maybe refactor to include dealer
+  def checkForBlackJackOrBust(currentScore)
+    if currentScore == 21
+      sleep(1)
+      puts "#{self.dealer.name}: You hit BlackJack! Congratulations! You win!"
+      sleep(1)
+      puts "#{self.dealer.name}: Please come back and play again!"
+      puts ""
+      self.result = "Player hit BlackJack! Player won."
+      self.save
+      exit
+    elsif currentScore > 21
+        sleep(1)
+        puts "#{self.dealer.name}: I'm sorry, but it looks like you busted! I am victorious!"
+        sleep(1)
+        puts "#{self.dealer.name}: Better luck next time, and thanks for playing!"
+        puts ""
+        self.result = "Player busted. Dealer won."
+        self.save
+        exit
+    end 
   end
 
 end

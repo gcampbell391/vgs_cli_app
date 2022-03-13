@@ -1,5 +1,3 @@
-# README
-
 # VGS BlackJack CLI App
 
 # Models
@@ -36,19 +34,19 @@ Clone the repo and run the following commands in the terminal to start up the ap
 - tty Prompt
 
 # Game Rules
-When the game begins, the dealer deals 1 card to the player, then one card to the dealer. The dealer then deals another card to the player. If the player's combined score is 21, then the player automatically wins with Blackjack. If not, The player has two options:
+When the game begins, the dealer deals 1 card to the player, then 1 card to the dealer. The dealer then deals another card to the player. If the player's combined score is 21, then the player automatically wins with Blackjack. If not, The player has two options:
 
 - Hit (Draw another card from the dealer. Take the chance of busting, but increase current score)
 - Stay (Stay at current score. Dealer's turn is next)
 
 The dealer will reveal their second card, and if the dealer has 21, they win. If not, the dealer will continue to hit (draw another card) until their score is 17 or higher. 
 
-Ways A Player Can Win:
+Ways a Player Can Win:
 - Score 21
 - Stay at current score, and dealer busts
 - Stay at current score, and dealer stays at a lower score
 
-Ways A Dealer Can Win:
+Ways a Dealer Can Win:
 - Score 21
 - Stay at current score, player has a lower score
 - Player busts 
