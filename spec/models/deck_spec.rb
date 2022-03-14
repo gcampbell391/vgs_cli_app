@@ -1,6 +1,5 @@
 require 'rails_helper'
 
-
 RSpec.describe Deck, type: :model do
 
   exampleCard1 = Card.new(id: 1, card_value: 1, card_name: "Ace of Diamonds", deck_id: 1)
@@ -13,8 +12,8 @@ RSpec.describe Deck, type: :model do
 
   # shuffling works correctly
   it "a deck can be shuffled properly" do
-    # shuffledCards = Deck.shuffleCards(cards)
-    # expect(shuffleCards).to eq(cards)
+    shuffledCards = Deck.shuffleCards(cards)
+    expect(shuffledCards).to_not eq(cards)
   end
 
 end

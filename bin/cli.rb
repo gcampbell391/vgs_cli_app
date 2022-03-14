@@ -1,7 +1,6 @@
 require_relative '../config/environment'
 
 # Start the CLI app!
-
 startGame = Game.run
 if startGame 
     # Create new game
@@ -16,7 +15,7 @@ if startGame
     # Check for BlackJack or Bust
     currentGame.checkForBlackJackOrBust(currentPlayerScore)
     #Ask Player for turn. The Player continues until they select "Stay", hit BlackJack, or bust
-    currentPlayerScore, currentDeck,  = currentGame.hitOrStay(currentPlayerScore, currentDeck)
+    currentPlayerScore, currentDeck = currentGame.hitOrStay(currentPlayerScore, currentDeck)
     # Check for BlackJack or Bust
     currentGame.checkForBlackJackOrBust(currentPlayerScore)
     #Proceed with Dealers turn. Dealer reveals second card, and continues to hit if score is < 17

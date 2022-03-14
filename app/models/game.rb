@@ -185,7 +185,6 @@ class Game < ApplicationRecord
       puts ""
       self.result = "Dealer hit BlackJack! Dealer won."
       self.save
-      exit
     # Check if dealer busted
     elsif updatedDealerScore > 21
       sleep(1)
@@ -195,7 +194,6 @@ class Game < ApplicationRecord
       puts ""
       self.result = "Dealer busted. Player won."
       self.save
-      exit
     # Check if dealer scored at least 17. Dealer only hits if score is below 17.
     elsif updatedDealerScore >= 17
       if updatedDealerScore == playerScore
@@ -213,7 +211,7 @@ class Game < ApplicationRecord
         sleep(1)
         puts "#{self.dealer.name}: Are you counting cards? I'm on to you :)"
         puts ""
-        self.result = "Dealer stayed at #{updatedDealerScore}, and Player stayed at #{playerScore}. Player won."
+        self.result = "Dealer stayed at #{updatedDealerScore}, and player stayed at #{playerScore}. Player won."
         self.save
       # Check if dealer's score is more than players score after both players stayed
       elsif updatedDealerScore > playerScore
@@ -225,8 +223,8 @@ class Game < ApplicationRecord
         self.result = "Dealer stayed at #{updatedDealerScore}, And player stayed at #{playerScore}. Dealer won."
         self.save
       end
-      exit
     end
+    Game.showRecentGameResults
   end
 
   # Check for blackjack or bust..maybe refactor to include dealer
@@ -239,6 +237,7 @@ class Game < ApplicationRecord
       puts ""
       self.result = "Player hit BlackJack! Player won."
       self.save
+      Game.showRecentGameResults
       exit
     elsif currentScore > 21
         sleep(1)
@@ -248,8 +247,27 @@ class Game < ApplicationRecord
         puts ""
         self.result = "Player busted. Dealer won."
         self.save
+        Game.showRecentGameResults
         exit
     end 
+  end
+
+  # Show recent game results
+  def self.showRecentGameResults
+    allGames = Game.all
+    allGamesTotal = allGames.count
+    sleep(1)
+    puts ""
+    puts "Most Recent Game Results:"
+    puts "========================="
+    sleep(1)
+    gameNumber = 5
+    for x in 1..5 do
+      puts "#{gameNumber}. #{allGames[allGamesTotal - x].result}"
+      gameNumber = gameNumber - 1
+    end
+    puts ""
+    puts ""
   end
 
 end
