@@ -202,7 +202,7 @@ class Game < ApplicationRecord
         sleep(1)
         puts "#{self.dealer.name}: You thought you were going to win with #{playerScore}, didn't you?"
         puts ""
-        self.result = "Dealer stayed at #{updatedDealerScore}, and Player stayed at #{playerScore}. Game was tied."
+        self.result = "Dealer stayed at #{updatedDealerScore}, and player stayed at #{playerScore}. Game was tied."
         self.save
       # Check if dealer's score is less than players score after both players stayed
       elsif updatedDealerScore < playerScore
@@ -220,7 +220,7 @@ class Game < ApplicationRecord
         sleep(1)
         puts "#{self.dealer.name}: Try being more aggresive next time!"
         puts ""
-        self.result = "Dealer stayed at #{updatedDealerScore}, And player stayed at #{playerScore}. Dealer won."
+        self.result = "Dealer stayed at #{updatedDealerScore}, and player stayed at #{playerScore}. Dealer won."
         self.save
       end
     end
@@ -262,12 +262,19 @@ class Game < ApplicationRecord
     puts "========================="
     sleep(1)
     gameNumber = 5
-    for x in 1..5 do
-      puts "#{gameNumber}. #{allGames[allGamesTotal - x].result}"
-      gameNumber = gameNumber - 1
+    # Error handling in case total games played is < 5
+    if allGamesTotal > 5
+      for x in 1..5 do
+        puts "#{gameNumber}. #{allGames[allGamesTotal - x].result}"
+        gameNumber = gameNumber - 1
+      end
+    else
+      puts ""
+      puts "Play more games to generate results!"
     end
     puts ""
     puts ""
   end
+
 
 end

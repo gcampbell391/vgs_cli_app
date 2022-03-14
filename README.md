@@ -30,8 +30,9 @@ Clone the repo and run the following commands in the terminal to start up the ap
 - rails runner bin/cli.rb (This is the command to run the app)
 
 # Built With
-- Ruby On Rails 
-- tty Prompt
+- Ruby On Rails (Application Framework)
+- tty Prompt (CLI interactions)
+- rspec (Testing)
 
 # Game Rules
 When the game begins, the dealer deals 1 card to the player, then 1 card to the dealer. The dealer then deals another card to the player. If the player's combined score is 21, then the player automatically wins with Blackjack. If not, The player has two options:
